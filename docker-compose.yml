@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  gateway:
+    container_name: microservice_gateway
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    ports:
+      - "9090:9090"
+    links:
+      - mariadb
+      - service1
+    depends_on:
+      - mariadb
+      - service1
+
+  service1:
+    container_name: microservice_service-1
+    build:
+      context: .
+      dockerfile: ./service-1/Dockerfile
+    ports:
+      - "9091:9091"
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name: mariadb_service
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: 1550
+      MARIADB_DATABASE: "microservices"
+      MARIADB_USER: "dbuser"
+      MARIADB_PASSWORD: "v4wedsavhoqwd"
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./database:/var/lib/mysql
