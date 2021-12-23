@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
+    env_file:
+      - ./gateway/.env
     ports:
       - "9090:9090"
     links:
@@ -20,6 +22,8 @@ services:
     build:
       context: .
       dockerfile: ./service-1/Dockerfile
+    env_file:
+      - ./service-1/.env
     ports:
       - "9091:9091"
     depends_on:

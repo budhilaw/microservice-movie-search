@@ -1,9 +1,0 @@
-{
-  "debug": true,
-  "server": {
-    "address": ":9091"
-  },
-  "context":{
-    "timeout": 2
-  }
-}

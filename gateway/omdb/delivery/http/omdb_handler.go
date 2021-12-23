@@ -105,23 +105,3 @@ func (h *OmdbHandler) Search(w http.ResponseWriter, request *http.Request) {
 		}
 	}
 }
-
-//func (h *OmdbHandler) Store(c echo.Context) (err error) {
-//	var input domain.Omdb
-//	err = c.Bind(&input)
-//	if err != nil {
-//		return c.JSON(http.StatusOK, err.Error())
-//	}
-//
-//	var ok bool
-//	if ok, err = isRequestValid(&input); !ok {
-//		return c.JSON(http.StatusBadRequest, err.Error())
-//	}
-//
-//	ctx := c.Request().Context()
-//	err = h.OmdbUsecase.Save(ctx, &input)
-//	if err != nil {
-//		return c.JSON(getStatusCode(err), common.APIResponse(err.Error(), nil))
-//	}
-//	return c.JSON(http.StatusCreated, input)
-//}

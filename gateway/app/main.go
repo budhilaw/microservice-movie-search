@@ -51,10 +51,6 @@ func main() {
 
 	r := mux.NewRouter()
 
-	//e := echo.New()
-	//mid := middleware.InitMiddleware()
-	//e.Use(mid.CORS)
-
 	timeoutContext := time.Duration(common.Env.ContextTimeout) * time.Second
 	omdbRepository := _omdbRepo.NewMysqlOmdbRepository(dbConn)
 	omdbUsecase := _omdbUsecase.NewOmdbUsecase(omdbRepository, timeoutContext)

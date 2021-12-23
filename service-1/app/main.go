@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/spf13/viper"
+	"fmt"
 	"google.golang.org/grpc"
 	"log"
 	"microservice-test/Service-1/common"
@@ -13,28 +13,21 @@ import (
 )
 
 func init() {
-	viper.SetConfigFile(`config.json`)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-
-	if viper.GetBool(`debug`) {
-		log.Println("Service RUN on DEBUG mode")
-	}
+	common.LoadEnv()
 }
 
 func main() {
 	ctx := context.Background()
 	service := usecase.NewSearchUsecase()
 	endpoints := http.Endpoints{SearchEndpoint: http.MakeSearchEndpoint(service)}
-	listener, err := net.Listen("tcp", viper.GetString("server.address"))
+	addr := fmt.Sprintf(":%d", common.Env.AppPort)
+	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Printf("Error when running listener, err: %v", err)
 		return
 	}
 
-	log.Println("[+] gRPC running on ", viper.GetString("server.address"))
+	log.Println("[+] gRPC running on ", addr)
 	handler := common.NewGRPCServer(ctx, endpoints)
 	gRPCServer := grpc.NewServer()
 	pb.RegisterMovieSearchServer(gRPCServer, handler)
