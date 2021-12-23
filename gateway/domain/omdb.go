@@ -17,10 +17,11 @@ type Omdb struct {
 }
 
 type OmdbUsecase interface {
+	Get(c context.Context, id string) (res *Omdb, err error)
 	Save(c context.Context, m *Omdb) (err error)
 }
 
 type OmdbRepository interface {
 	Store(ctx context.Context, m *Omdb) (err error)
-	FindByImdbID(ctx context.Context, imdbId string) (res Omdb, err error)
+	FindByImdbID(ctx context.Context, imdbId string) (res *Omdb, err error)
 }

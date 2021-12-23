@@ -76,7 +76,7 @@ func (r *mysqlOmdbRepository) Store(ctx context.Context, m *domain.Omdb) (err er
 	return
 }
 
-func (r *mysqlOmdbRepository) FindByImdbID(ctx context.Context, imdbId string) (res domain.Omdb, err error) {
+func (r *mysqlOmdbRepository) FindByImdbID(ctx context.Context, imdbId string) (res *domain.Omdb, err error) {
 	query := `SELECT id, title, year, imdb_id, content_type, poster FROM log WHERE imdb_id = ?`
 	list, err := r.fetch(ctx, query, imdbId)
 	if err != nil {
@@ -85,7 +85,7 @@ func (r *mysqlOmdbRepository) FindByImdbID(ctx context.Context, imdbId string) (
 	}
 
 	if len(list) > 0 {
-		res = list[0]
+		res = &list[0]
 	} else {
 		return res, common.ErrNotFound
 	}

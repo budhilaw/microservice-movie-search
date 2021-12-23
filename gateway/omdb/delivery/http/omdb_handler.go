@@ -89,18 +89,22 @@ func (h *OmdbHandler) Search(w http.ResponseWriter, request *http.Request) {
 		ctx := context.Background()
 
 		for _, movie := range resp.MovieList {
-			data := domain.Omdb{
-				Title:       movie.Title,
-				Year:        movie.Year,
-				ImdbID:      movie.ImdbID,
-				ContentType: movie.GetType(),
-				Poster:      movie.Poster,
-				CreatedAt:   time.Now(),
-			}
+			existedData, _ := h.OmdbUsecase.Get(ctx, movie.ImdbID)
+			// check if log already in database
+			if existedData == (&domain.Omdb{}) {
+				data := domain.Omdb{
+					Title:       movie.Title,
+					Year:        movie.Year,
+					ImdbID:      movie.ImdbID,
+					ContentType: movie.GetType(),
+					Poster:      movie.Poster,
+					CreatedAt:   time.Now(),
+				}
 
-			err = h.OmdbUsecase.Save(ctx, &data)
-			if err != nil {
-				log.Println("error when creating log. err : ", err.Error())
+				err = h.OmdbUsecase.Save(ctx, &data)
+				if err != nil {
+					log.Println("error when creating log. err : ", err.Error())
+				}
 			}
 		}
 	}

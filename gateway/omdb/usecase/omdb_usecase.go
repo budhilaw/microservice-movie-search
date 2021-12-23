@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"microservice-test/common"
 	"microservice-test/domain"
 	"time"
 )
@@ -16,15 +15,22 @@ func NewOmdbUsecase(or domain.OmdbRepository, timeout time.Duration) domain.Omdb
 	return &omdbUsecase{omdbRepo: or, contextTimeout: timeout}
 }
 
-func (u *omdbUsecase) Save(c context.Context, m *domain.Omdb) (err error) {
+func (u *omdbUsecase) Get(c context.Context, id string) (m *domain.Omdb, err error) {
 	ctx, cancel := context.WithTimeout(c, u.contextTimeout)
 	defer cancel()
 
 	// get by IMDB ID
-	existedData, _ := u.omdbRepo.FindByImdbID(ctx, m.ImdbID)
-	if existedData != (domain.Omdb{}) {
-		return common.ErrConflict
+	existedData, err := u.omdbRepo.FindByImdbID(ctx, id)
+	if err != nil {
+		return nil, err
 	}
+
+	return existedData, nil
+}
+
+func (u *omdbUsecase) Save(c context.Context, m *domain.Omdb) (err error) {
+	ctx, cancel := context.WithTimeout(c, u.contextTimeout)
+	defer cancel()
 
 	// saving
 	err = u.omdbRepo.Store(ctx, m)
