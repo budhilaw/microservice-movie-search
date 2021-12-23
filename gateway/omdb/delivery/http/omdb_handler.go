@@ -22,6 +22,7 @@ type OmdbHandler struct {
 
 func NewOmdbHandler(e *mux.Router, ou domain.OmdbUsecase) {
 	handler := &OmdbHandler{OmdbUsecase: ou}
+	e.HandleFunc("/detail/{id}", handler.Get).Methods("GET")
 	e.HandleFunc("/search", handler.Search).Methods("GET")
 }
 
@@ -50,6 +51,24 @@ func getStatusCode(err error) int {
 	default:
 		return http.StatusInternalServerError
 	}
+}
+
+func (h *OmdbHandler) Get(w http.ResponseWriter, request *http.Request) {
+	param := mux.Vars(request)
+	imdbID := param["id"]
+	if imdbID == "" {
+		log.Println("Error when reading URL Query, err: id not found")
+		w.Write([]byte("id cannot be empty"))
+		return
+	}
+
+	ctx := context.Background()
+	existedData, err := h.OmdbUsecase.Get(ctx, imdbID)
+	if err != nil {
+		log.Println("error when trying to get data by id. err : ", err.Error())
+		w.Write([]byte("Data not found"))
+	}
+	json.NewEncoder(w).Encode(existedData)
 }
 
 func (h *OmdbHandler) Search(w http.ResponseWriter, request *http.Request) {

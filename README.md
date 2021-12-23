@@ -12,6 +12,6 @@ silahkan disesuaikan.
 ### Daftar Endpoint
 ```
 GET /search                 - pencarian film (berdasarkan http://www.omdbapi.com/)
-GET /detail/{imdbID}        - akses detail film dengan IMDB ID
+GET /detail/{imdbID}        - akses detail film dengan IMDB ID (contoh: 'tt1785572')
 ```
 Saat melakukan pencarian film, otomatis akan melakukan logging dengan menyimpan result ke database MySQL.
